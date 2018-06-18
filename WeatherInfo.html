@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Finding Weather info</title>
+  </head>
+  <body>
+    <div id="WeatherInfo"></div>
+    <script src="https://fb.me/react-15.0.0.js"></script>
+    <script src="https://fb.me/react-dom-15.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+		<script type="text/babel">
+		//Add extension to chrome " Allow-Control-Allow-Origin "
+      var WeatherInfo = React.createClass({
+        getInitialState: function() {
+            return { chicagoRes: '' };
+				},
+				componentDidMount: function(){
+					let chicagoUrl = 'http://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22';
+					axios.get(chicagoUrl).then(res => {
+						if(res.status=='200'){
+							this.setState({chicagoRes : res.data});
+						}
+					});
+				},
+        render: function() {
+						const { chicagoRes } = this.state;
+						const { weather, name, wind } = chicagoRes || {};
+          return (
+              <div>
+								<h1>Weather Info Component</h1>
+								<div>
+									<b>Country : </b> {name}
+								</div>
+								<div>
+									<b>Weather : </b> {weather && weather[0].description }
+								</div>
+								<div>
+									<b>Wind Speed : </b> {wind && wind.speed }
+								</div>
+            </div>
+          )
+        }
+      });
+      ReactDOM.render(
+        <WeatherInfo/>,
+        document.getElementById('WeatherInfo')
+      );
+    </script>
+  </body>
+</html>
